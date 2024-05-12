@@ -24,5 +24,8 @@ class Property extends Model
         'other_electric_accessories',
         'client_name',
         'client_phone',
+        'promoted',
+        'verified',
+        'bhk',
     ];
 }

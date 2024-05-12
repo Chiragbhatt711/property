@@ -25,8 +25,8 @@ php artisan db:seed --class=CreateAdminUserSeeder
 
     
 7. Admin Login
-    email = admin@qqtube.com
-    password = CumulativeApps#2022
+    email = admin@admin.com
+    password = admin#2024
 
 
 8. Add in .env file

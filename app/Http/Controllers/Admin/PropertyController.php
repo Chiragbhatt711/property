@@ -31,7 +31,37 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        return view('admin.property.create');
+        $propertyType = [
+                            'Agriculture Land' => 'Agriculture Land',
+                            'Bungalow' => 'Bungalow',
+                            'Commercial + Residence Apartment' => 'Commercial + Residence Apartment',
+                            'Commercial Space' => 'Commercial Space',
+                            'Duplex' => 'Duplex',
+                            'Farm House' => 'Farm House',
+                            'Flat' => 'Flat',
+                            'Industrial Land' => 'Industrial Land',
+                            'Mini Duplex' => 'Mini Duplex',
+                            'Penthouse' => 'Penthouse',
+                            'Plot' => 'Plot',
+                            'School' => 'School',
+                            'Shop' => 'Shop',
+                            'Tenament' => 'Tenament',
+                            'Triplex' => 'Triplex',
+        ];
+
+        $bhk = [
+            'Bedrooms' => 'Bedrooms',
+            '1 BHK' => '1 BHK',
+            '2 BHK' => '2 BHK',
+            '3 BHK' => '3 BHK',
+            '4 BHK' => '4 BHK',
+            '5 BHK' => '5 BHK',
+            '6 BHK' => '6 BHK',
+            '7 BHK' => '7 BHK',
+            '8 BHK' => '8 BHK',
+            '9 BHK' => '9 BHK',
+        ];
+        return view('admin.property.create',compact('propertyType','bhk'));
     }
 
     /**

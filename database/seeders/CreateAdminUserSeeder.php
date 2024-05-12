@@ -14,7 +14,7 @@ class CreateAdminUserSeeder extends Seeder
      */
     public function run()
     {
-        $checkAdminExist = User::where(['email'=>'admin@quivid.com'])->first();
+        $checkAdminExist = User::where(['email'=>'admin@admin.com'])->first();
 
         if(!$checkAdminExist)
         {

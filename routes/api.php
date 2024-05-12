@@ -24,6 +24,8 @@ Route::group(['prefix' => 'v1',], function ($router) {
     Route::post('login', 'Api\UserController@login');
     Route::post('register', 'Api\UserController@register');
     Route::post('get-property', 'Api\UserController@getProperty');
+    Route::post('get-verified-property', 'Api\UserController@getVerifiedProperty');
+    Route::post('get-property-details/{id}', 'Api\UserController@getPropertyDetails');
 });
 
 Route::group(['middleware' => ['jwt.verify'], 'prefix' => 'v1',], function ($router) {

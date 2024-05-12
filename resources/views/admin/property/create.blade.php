@@ -66,9 +66,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputName">Propert type</label>
-                                    {!! Form::select('property_type',['1-BHK','2-BHK','3-BHK'], null, array('placeholder' => 'Please select','class' =>'form-control')) !!}
+                                    {!! Form::select('property_type',$propertyType, null, array('placeholder' => 'Please select','class' =>'form-control')) !!}
                                     @if ($errors->has('property_type'))
                                         <p class="text-danger">{{ $errors->first('property_type')}}</p>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputName">BHK</label>
+                                    {!! Form::select('bhk',$bhk, null, array('placeholder' => 'Please select','class' =>'form-control')) !!}
+                                    @if ($errors->has('bhk'))
+                                        <p class="text-danger">{{ $errors->first('bhk')}}</p>
                                     @endif
                                 </div>
                                 <div class="form-group m-0">
@@ -106,6 +113,16 @@
                                     <label for="other_electric_accessories">
                                         <input type="checkbox" value="1" name="other_electric_accessories" id="other_electric_accessories">
                                     Other electric accessories</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="verified">
+                                        <input type="checkbox" value="1" name="verified" id="verified">
+                                    Is Verified</label>
+                                </div>
+                                <div class="form-group">
+                                    <label for="promoted">
+                                        <input type="checkbox" value="1" name="promoted" id="promoted">
+                                    Is Promoted</label>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputName">Client Name</label>

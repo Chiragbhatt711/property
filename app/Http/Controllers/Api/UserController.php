@@ -70,13 +70,16 @@ class UserController extends Controller
             'username' => 'required',
             'email' => 'required|unique:users,email',
             'phone'=>  'required',
+            'password' => 'required|min:8',
         ]);
         if ($validator->fails()) {
             return $this->sendError($validator->errors(), 'Validation Error', 422);
         }
 
         $input = $request->all();
-        $input['password'] = Hash::make('11111');
+        if($request->password){
+            $input['password'] = Hash::make($request->password);
+        }
         $user = User::create($input);
 
         $success = [
@@ -87,9 +90,10 @@ class UserController extends Controller
 
     public function getProperty(Request $request)
     {
-        $properties = Property::leftJoin('property_images','properties.id','property_images.property_id')
-                ->select('properties.*', DB::raw('MIN(property_images.id) as first_post_id'), 'property_images.image as image')
-                ->get();
+        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+            ->select('properties.*', DB::raw('MIN(property_images.id) as first_image_id'), 'property_images.image')
+            ->groupBy('properties.id') // Group by property ID to get unique properties
+            ->get();
 
         $properties->transform(function ($property) {
             if ($property->image) {
@@ -104,5 +108,58 @@ class UserController extends Controller
 
         $success = "success";
         return $this->sendResponse($success, $properties, 200);
+    }
+
+    public function getVerifiedProperty()
+    {
+        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+            ->where('properties.verified',1)
+            ->select('properties.*', DB::raw('MIN(property_images.id) as first_image_id'), 'property_images.image')
+            ->groupBy('properties.id') // Group by property ID to get unique properties
+            ->get();
+
+        $properties->transform(function ($property) {
+            if ($property->image) {
+                $imageUrl = asset('uploads/property_images/' . $property->image);
+                $property->image_url = $imageUrl;
+            } else {
+                $property->image_url = null;
+            }
+
+            return $property;
+        });
+
+        $success = "success";
+        return $this->sendResponse($success, $properties, 200);
+    }
+
+    public function getPropertyDetails($id)
+    {
+        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+            ->where('properties.id',$id)
+            ->select('properties.*', 'property_images.id as image_id', 'property_images.image')
+            ->orderBy('properties.id') // Optionally order by property ID for consistency
+            ->get();
+
+        // Group properties by ID and collect images for each property
+        $groupedProperties = $properties->groupBy('id')->map(function ($group) {
+            $property = $group->first(); // Get the first property in the group
+
+            // Append all images associated with the property
+            $property->images = $group->map(function ($item) {
+                return [
+                    'id' => $item->image_id,
+                    'url' => asset('uploads/property_images/' . $item->image)
+                ];
+            })->all();
+
+            // Determine the first image (based on the minimum image ID)
+            $property->first_image = $group->min('image_id');
+
+            return $property;
+        })->values();
+
+        $success = "success";
+        return $this->sendResponse($success, $groupedProperties, 200);
     }
 }
