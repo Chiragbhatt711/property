@@ -107,13 +107,13 @@ class UserController extends Controller
         });
 
         $success = "success";
-        return $this->sendResponse($success, $properties, 200);
+        return $this->sendResponse($properties, $success, 200);
     }
 
-    public function getVerifiedProperty()
+    public function getPromotedProperty()
     {
         $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
-            ->where('properties.verified',1)
+            ->where('properties.promoted',1)
             ->select('properties.*', DB::raw('MIN(property_images.id) as first_image_id'), 'property_images.image')
             ->groupBy('properties.id') // Group by property ID to get unique properties
             ->get();
@@ -130,36 +130,47 @@ class UserController extends Controller
         });
 
         $success = "success";
-        return $this->sendResponse($success, $properties, 200);
+        return $this->sendResponse($properties, $success, 200);
     }
 
-    public function getPropertyDetails($id)
+    public function getPropertyDetails(Request $request)
     {
-        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
-            ->where('properties.id',$id)
-            ->select('properties.*', 'property_images.id as image_id', 'property_images.image')
-            ->orderBy('properties.id') // Optionally order by property ID for consistency
-            ->get();
+        $input = $request->only('id');
 
-        // Group properties by ID and collect images for each property
-        $groupedProperties = $properties->groupBy('id')->map(function ($group) {
-            $property = $group->first(); // Get the first property in the group
+        $validator = Validator::make($input, [
+            'id' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors(), 'Validation Error', 422);
+        }
+        $id = $request->id;
+        if($id){
+            $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+                ->where('properties.id',$id)
+                ->select('properties.*', 'property_images.id as image_id', 'property_images.image')
+                ->orderBy('properties.id') // Optionally order by property ID for consistency
+                ->get();
 
-            // Append all images associated with the property
-            $property->images = $group->map(function ($item) {
-                return [
-                    'id' => $item->image_id,
-                    'url' => asset('uploads/property_images/' . $item->image)
-                ];
-            })->all();
+            // Group properties by ID and collect images for each property
+            $groupedProperties = $properties->groupBy('id')->map(function ($group) {
+                $property = $group->first(); // Get the first property in the group
 
-            // Determine the first image (based on the minimum image ID)
-            $property->first_image = $group->min('image_id');
+                // Append all images associated with the property
+                $property->images = $group->map(function ($item) {
+                    return [
+                        'id' => $item->image_id,
+                        'url' => asset('uploads/property_images/' . $item->image)
+                    ];
+                })->all();
 
-            return $property;
-        })->values();
+                // Determine the first image (based on the minimum image ID)
+                $property->first_image = $group->min('image_id');
 
-        $success = "success";
-        return $this->sendResponse($success, $groupedProperties, 200);
+                return $property;
+            })->values();
+
+            $success = "success";
+            return $this->sendResponse($groupedProperties, $success, 200);
+        }
     }
 }
