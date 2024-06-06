@@ -38,6 +38,7 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::resource('users', 'Admin\UserController');
     Route::get('user_export', 'Admin\UserController@Export')->name('user_export');
     Route::resource('property', 'Admin\PropertyController');
+    Route::post('get_city_area', 'Admin\PropertyController@getArea')->name('get_city_area');
 
     Route::get('/my-profile', 'Admin\UserController@myProfile')->name('my_profile');
     Route::patch('/profile-update/{id}', 'Admin\UserController@profileUpdate')->name('profile_update');

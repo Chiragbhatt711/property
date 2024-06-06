@@ -3,8 +3,12 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Area;
+use App\Models\BhkType;
+use App\Models\City;
 use App\Models\Property;
 use App\Models\PropertyImage;
+use App\Models\PropertyType;
 use Illuminate\Http\Request;
 use DB;
 
@@ -20,7 +24,7 @@ class PropertyController extends Controller
         $property = Property::leftJoin('property_images','properties.id','property_images.property_id')
                 ->select('properties.*', DB::raw('MIN(property_images.id) as first_post_id'), 'property_images.image as image')
                 ->paginate(10);
-
+        
         return view('admin.property.index',compact('property'));
     }
 
@@ -31,37 +35,13 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        $propertyType = [
-                            'Agriculture Land' => 'Agriculture Land',
-                            'Bungalow' => 'Bungalow',
-                            'Commercial + Residence Apartment' => 'Commercial + Residence Apartment',
-                            'Commercial Space' => 'Commercial Space',
-                            'Duplex' => 'Duplex',
-                            'Farm House' => 'Farm House',
-                            'Flat' => 'Flat',
-                            'Industrial Land' => 'Industrial Land',
-                            'Mini Duplex' => 'Mini Duplex',
-                            'Penthouse' => 'Penthouse',
-                            'Plot' => 'Plot',
-                            'School' => 'School',
-                            'Shop' => 'Shop',
-                            'Tenament' => 'Tenament',
-                            'Triplex' => 'Triplex',
-        ];
+        $propertyType = PropertyType::select('id','name')->get()->pluck('name','id')->toArray();
+        $bhk = BhkType::select('id','name')->get()->pluck('name','id')->toArray();
+        $city = City::select('id','name')->get()->pluck('name','id')->toArray();
+        
 
-        $bhk = [
-            'Bedrooms' => 'Bedrooms',
-            '1 BHK' => '1 BHK',
-            '2 BHK' => '2 BHK',
-            '3 BHK' => '3 BHK',
-            '4 BHK' => '4 BHK',
-            '5 BHK' => '5 BHK',
-            '6 BHK' => '6 BHK',
-            '7 BHK' => '7 BHK',
-            '8 BHK' => '8 BHK',
-            '9 BHK' => '9 BHK',
-        ];
-        return view('admin.property.create',compact('propertyType','bhk'));
+
+        return view('admin.property.create',compact('propertyType','bhk','city'));
     }
 
     /**
@@ -76,6 +56,7 @@ class PropertyController extends Controller
             'name' => 'required',
             'address' => 'required',
             'city' => 'required',
+            'area' => 'required',
             'description' => 'required',
             'price' => 'required',
             'property_type' => 'required',
@@ -85,7 +66,8 @@ class PropertyController extends Controller
         ],[
             'name.required' => 'Please enter property name',
             'address.required' => 'Please enter address',
-            'city.required' => 'Please enter city',
+            'city.required' => 'Please select city',
+            'area.required' => 'Please select area',
             'description.required' => 'Please enter description',
             'price.required' => 'Please enter price',
             'property_type.required' => 'Please select property type',
@@ -159,5 +141,14 @@ class PropertyController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function getArea(Request $request)
+    {
+        $id = $request->city;
+
+        $area = Area::where('city_id',$id)->select('id','area_name')->get();
+
+        return response()->json($area);
     }
 }

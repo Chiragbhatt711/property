@@ -14,7 +14,7 @@
                     </ol>
                 </div>
             </div>
-        </div><!-- /.container-fluid -->
+        </div>
     </section>
     <!-- Main content -->
     <section class="content">
@@ -45,9 +45,16 @@
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputName">City</label>
-                                    {!! Form::text('city', null, array('placeholder' => 'City','class' =>'form-control')) !!}
+                                    {!! Form::select('city',$city, null, array('placeholder' => 'Please select','class' =>'form-control','id'=>'city')) !!}
                                     @if ($errors->has('city'))
                                         <p class="text-danger">{{ $errors->first('city')}}</p>
+                                    @endif
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleInputName">Area</label>
+                                    {!! Form::select('area',[], null, array('placeholder' => 'Please select','class' =>'form-control','id'=>'area')) !!}
+                                    @if ($errors->has('area'))
+                                        <p class="text-danger">{{ $errors->first('area')}}</p>
                                     @endif
                                 </div>
                                 <div class="form-group">
@@ -149,4 +156,26 @@
         </div>
     </section>
 </div>
+@endsection
+@section('datatable')
+<script>
+    $('#city').change(function(){
+        $.ajax({
+            url: "{{ route('get_city_area') }}",
+            type:'POST',
+            data:{
+                    '_token' : $('meta[name="csrf-token"]').attr('content'),
+                    city:$('#city').val(),
+            },
+            success:function(data) {
+                let html ="<option value=''>Please select</option>";
+                $.each(data, function(key, value){
+                    
+                    html += "<option value='"+value.id+"'  >"+value.area_name+"</option>";
+                })
+                $("#area").html(html);
+            }
+        });
+    });
+</script>
 @endsection

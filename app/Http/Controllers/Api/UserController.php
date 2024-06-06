@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Area;
+use App\Models\BhkType;
+use App\Models\City;
+use App\Models\Intrested;
 use App\Models\Property;
+use App\Models\PropertyType;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Validator;
@@ -90,21 +95,25 @@ class UserController extends Controller
 
     public function getProperty(Request $request)
     {
-        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
-            ->select('properties.*', DB::raw('MIN(property_images.id) as first_image_id'), 'property_images.image')
-            ->groupBy('properties.id') // Group by property ID to get unique properties
-            ->get();
+        
+        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id');
+        // if(isset($request->))
 
-        $properties->transform(function ($property) {
-            if ($property->image) {
-                $imageUrl = asset('uploads/property_images/' . $property->image);
-                $property->image_url = $imageUrl;
-            } else {
-                $property->image_url = null;
+	    $properties = $properties->select('properties.*', DB::raw('GROUP_CONCAT(property_images.image) as images'))
+        ->groupBy('properties.id')
+	    ->get();
+
+        // Add URL to each image
+        foreach ($properties as $property) {
+            $images = explode(',', $property->images);
+            $imageUrls = [];
+            foreach ($images as $image) {
+                if($image){
+                    $imageUrls[] = asset('uploads/property_images/' . $image); // Modify the path as per your setup
+                }
             }
-
-            return $property;
-        });
+            $property->images = $imageUrls;
+        }
 
         $success = "success";
         return $this->sendResponse($properties, $success, 200);
@@ -112,22 +121,40 @@ class UserController extends Controller
 
     public function getPromotedProperty()
     {
+        //$properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+        //    ->where('properties.promoted',1)
+        //    ->select('properties.*', DB::raw('MIN(property_images.id) as first_image_id'), 'property_images.image')
+        //    ->groupBy('properties.id') // Group by property ID to get unique properties
+       //     ->get();
+
+       // $properties->transform(function ($property) {
+       //     if ($property->image) {
+       //         $imageUrl = asset('uploads/property_images/' . $property->image);
+       //         $property->image_url = $imageUrl;
+      //      } else {
+      //          $property->image_url = null;
+      //      }
+
+      //      return $property;
+      //  });
+      
         $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
-            ->where('properties.promoted',1)
-            ->select('properties.*', DB::raw('MIN(property_images.id) as first_image_id'), 'property_images.image')
-            ->groupBy('properties.id') // Group by property ID to get unique properties
+            ->where('properties.promoted', 1)
+            ->select('properties.*', DB::raw('GROUP_CONCAT(property_images.image) as images'))
+            ->groupBy('properties.id')
             ->get();
 
-        $properties->transform(function ($property) {
-            if ($property->image) {
-                $imageUrl = asset('uploads/property_images/' . $property->image);
-                $property->image_url = $imageUrl;
-            } else {
-                $property->image_url = null;
+        // Add URL to each image
+        foreach ($properties as $property) {
+            $images = explode(',', $property->images);
+            $imageUrls = [];
+            foreach ($images as $image) {
+                if($image){
+                    $imageUrls[] = asset('uploads/property_images/' . $image); // Modify the path as per your setup
+                }
             }
-
-            return $property;
-        });
+            $property->images = $imageUrls;
+        }
 
         $success = "success";
         return $this->sendResponse($properties, $success, 200);
@@ -166,11 +193,66 @@ class UserController extends Controller
                 // Determine the first image (based on the minimum image ID)
                 $property->first_image = $group->min('image_id');
 
+                $property->whatsapp_number = '7046059583';
+                $property->phone_number = '7046059583';
+                $property->whatsapp_message = "Hi, i'm intrested in #".$property->id." ".$property->name." please shere more information" ;
+
                 return $property;
             })->values();
 
             $success = "success";
             return $this->sendResponse($groupedProperties, $success, 200);
         }
+    }
+
+    public function intrested(Request $request)
+    {
+        $input = $request->only('property_id','user_name','mobile_number');
+
+        $validator = Validator::make($input, [
+            'property_id' => 'required',
+            'user_name' => 'required',
+            'mobile_number' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return $this->sendError($validator->errors(), 'Validation Error', 422);
+        }
+
+        $insert = Intrested::create($input);
+        $success = "Submit successfully";
+        $data = [];
+        return $this->sendResponse($data, $success, 200);
+    }
+
+    public function getCity()
+    {
+        $data = City::get();
+        $success="Success";
+        return $this->sendResponse($data, $success, 200);
+    }
+
+    public function getArea(Request $request)
+    {
+        $id = $request->id;
+        $data = [];
+        if($id){
+            $data = Area::where('city_id',$id)->get();
+        }
+        $success="Success";
+        return $this->sendResponse($data, $success, 200);
+    }
+
+    public function getPropertyType()
+    {
+        $data = PropertyType::get();
+        $success="Success";
+        return $this->sendResponse($data, $success, 200);
+    }
+
+    public function getBhkType()
+    {
+        $data = BhkType::get();
+        $success="Success";
+        return $this->sendResponse($data, $success, 200);
     }
 }

@@ -26,6 +26,10 @@ Route::group(['prefix' => 'v1',], function ($router) {
     Route::post('get-property', 'Api\UserController@getProperty');
     Route::post('get-promoted-property', 'Api\UserController@getPromotedProperty');
     Route::post('get-property-details', 'Api\UserController@getPropertyDetails');
+    Route::get('get-city','Api\UserController@getCity');
+    Route::post('get-area','Api\UserController@getArea');
+    Route::get('get-property-type','Api\UserController@getPropertyType');
+    Route::get('get-bhk-type','Api\UserController@getBhkType');
 });
 
 Route::group(['middleware' => ['jwt.verify'], 'prefix' => 'v1',], function ($router) {

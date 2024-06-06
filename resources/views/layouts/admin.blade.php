@@ -9,7 +9,7 @@
 
   <link rel="shortcut icon" href="{{ asset('favicon.png') }}" type="image/x-icon">
 
-  <title>Social King Admin </title>
+  <title>{{ env('APP_NAME') }} </title>
 
   <!-- Google Font: Source Sans Pro -->
   <!-- DataTables -->
