@@ -263,7 +263,7 @@ class UserController extends Controller
         $data=[];
         if($poster){
             foreach($poster as $value){
-                $data[]= ['image'=>asset('assets/poster_images/'.$value->image)];
+                $data[]= ['image'=>asset('assets/poster_images/'.$value->images)];
             }
         }
         $success="Success";
