@@ -30,6 +30,7 @@ Route::group(['prefix' => 'v1',], function ($router) {
     Route::post('get-area','Api\UserController@getArea');
     Route::get('get-property-type','Api\UserController@getPropertyType');
     Route::get('get-bhk-type','Api\UserController@getBhkType');
+    Route::get('get-poster','Api\UserController@getPoster');
 });
 
 Route::group(['middleware' => ['jwt.verify'], 'prefix' => 'v1',], function ($router) {

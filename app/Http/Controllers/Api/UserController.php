@@ -7,6 +7,7 @@ use App\Models\Area;
 use App\Models\BhkType;
 use App\Models\City;
 use App\Models\Intrested;
+use App\Models\PosterImage;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
@@ -95,7 +96,7 @@ class UserController extends Controller
 
     public function getProperty(Request $request)
     {
-        
+
         $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id');
         // if(isset($request->))
 
@@ -137,7 +138,7 @@ class UserController extends Controller
 
       //      return $property;
       //  });
-      
+
         $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
             ->where('properties.promoted', 1)
             ->select('properties.*', DB::raw('GROUP_CONCAT(property_images.image) as images'))
@@ -252,6 +253,19 @@ class UserController extends Controller
     public function getBhkType()
     {
         $data = BhkType::get();
+        $success="Success";
+        return $this->sendResponse($data, $success, 200);
+    }
+
+    public function getPoster()
+    {
+        $poster = PosterImage::get();
+        $data=[];
+        if($poster){
+            foreach($poster as $value){
+                $data[]= ['image'=>asset('assets/poster_images/'.$value->image)];
+            }
+        }
         $success="Success";
         return $this->sendResponse($data, $success, 200);
     }
