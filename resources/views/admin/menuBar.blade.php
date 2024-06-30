@@ -16,19 +16,27 @@
                 </p>
             </a>
         </li>
-        <li class="nav-item">
+        {{--  <li class="nav-item">
             <a href="{{ route('users.index') }}" class="nav-link {{ Request::is('users/*') ||Request::is('users') ? 'active' : '' }}">
                 <i class="nav-icon fa fa-list-alt"></i>
                 <p>
                     Users
                 </p>
             </a>
-        </li>
+        </li>  --}}
         <li class="nav-item">
             <a href="{{ route('property.index') }}" class="nav-link {{ Request::is('property/*') ||Request::is('property') ? 'active' : '' }}">
                 <i class="nav-icon fa fa-list-alt"></i>
                 <p>
                     Property
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a href="{{ route('inquiry') }}" class="nav-link {{ Request::is('inquiry/*') ||Request::is('inquiry') ? 'active' : '' }}">
+                <i class="nav-icon fa fa-list-alt"></i>
+                <p>
+                    Inquiry
                 </p>
             </a>
         </li>

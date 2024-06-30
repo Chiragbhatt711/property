@@ -12,13 +12,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1>Property</h1>
+                        <h1>Inquiry</h1>
                     </div>
                     <div class="col-sm-6">
-                        <ol class="breadcrumb float-right">
+                        {{--  <ol class="breadcrumb float-right">
                             <li class="breadcrumb-item"><a class="btn btn-block btn-primary"
-                                    href="{{ route('property.create') }}">Add New Property</a></li>
-                        </ol>
+                                    href="{{ route('users.create') }}">Add New User</a></li>
+                        </ol>  --}}
                     </div>
                 </div>
             </div>
@@ -31,30 +31,11 @@
                         <div class="card card-primary">
                             <div class="card-header">
                                 <div class="d-flex align-items-center justify-content-between">
-                                    <h3 class="card-title">Property List</h3>
-                                    {{-- <a class="btn btn-dark" id="export-to-excel">Export</a> --}}
+                                    <h3 class="card-title">Inquiry List</h3>
+                                    <a class="btn btn-dark" id="export-to-excel">Export</a>
                                 </div>
                             </div>
                             <div class="card-body">
-
-                                <div class="sp_search d-flex align-items-center justify-content-between mb-3">
-                                    <form class="dropdown-block">
-                                        <div class="row g-3 justify-content-md-end align-items-center">
-                                            <div class="col-auto">
-                                                @php
-                                                    $perpage = ['10'=>'10 Per Page','25'=>'25 Per Page','50'=>'50 Per Page','100'=>'100 Per Page'];
-                                                @endphp
-                                                {!! Form::select("perpage", $perpage, isset($_GET["perpage"]) && $_GET["perpage"] ? $_GET["perpage"] : null, ['onchange'=>'this.form.submit()','class'=>'form-control']) !!}
-                                            </div>
-                                            <div class="col-auto">
-                                                <div class="input-group flex-nowrap d-flex mt-sm-0 mt-2">
-                                                    <button type="submit" class="input-group-text" id="addon-wrapping"><i class="fas fa-search"></i></button>
-                                                    <input type="search" name="search" value="{{ isset($_GET['search']) && $_GET['search'] ? $_GET['search'] : '' }}" class="form-control" placeholder="Search">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
 
                                 @if (\Session::has('success'))
                                     <div>
@@ -66,48 +47,21 @@
                                     <thead>
                                         <tr>
                                             <th><a href="javascript:void(0)" onclick="orderBy('no')">No</a></th>
-                                            <th>Image</th>
-                                            <th><a href="javascript:void(0)" onclick="orderBy('name')">Property Name</a></th>
-                                            <th><a href="javascript:void(0)" onclick="orderBy('status')">Status</a></th>
-                                            <th>Action</th>
+                                            <th><a href="javascript:void(0)" onclick="orderBy('username')">Property Name</a></th>
+                                            <th><a href="javascript:void(0)" onclick="orderBy('email')">User Name</a></th>
+                                            <th><a href="javascript:void(0)" onclick="orderBy('phone')">Phone</a></th>
+                                            <th><a href="javascript:void(0)" onclick="orderBy('phone')">Inquiry Date</a></th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        @if (isset($property) && $property->count() > 0)
-                                        @php
-                                            $i=0;
-                                        @endphp
-                                            @foreach ($property as $single)
-                                            @php
-                                                $i++;
-                                            @endphp
+                                        @if (isset($inquiry) && $inquiry->count() > 0)
+                                            @foreach ($inquiry as $single)
                                                 <tr>
-                                                    <td>{{ $i }}</td>
-                                                    <td>
-                                                        @if(\File::exists(str_replace('\\', '/', public_path('uploads/property_images/'.$single->image))) && $single->image)
-                                                            <img style="width:55px !important;height:50px !important;" src="{{ asset('uploads/property_images/'.$single->image) }}" alt="{{$single->image}}">
-                                                        @endif
-                                                    </td>
-                                                    <td>{{$single->name}}</td>
-                                                    @php
-                                                        $status = 'Deactive';
-                                                        if (strtolower($single->status) == '1') {
-                                                            $status = 'Active';
-                                                        }
-                                                    @endphp
-                                                    <td>{{$status}}</td>
-                                                    <td>
-                                                        <div class="dropdown">
-                                                            <button class="btn  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                                                Action
-                                                            </button>
-                                                            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                                                                <a style="inline-size: max-content;" class="dropdown-item" href="{{route('property.edit', $single->id)}}">Edit</a>
-
-                                                                <button class="dropdown-item" onclick="delele('{{$single->id}}');">Delete</button>
-                                                        </div>
-                                                    </td>
-
+                                                    <td>{{$single->id}}</td>
+                                                    <td>{{$single->property_name}}</td>
+                                                    <td>{{$single->user_name}}</td>
+                                                    <td>{{$single->mobile_number}}</td>
+                                                    <td>{{ date('Y-m-d',strtotime($single->created_at)) }}</td>
                                                 </tr>
                                             @endforeach
                                         @else
@@ -119,17 +73,17 @@
                                     <tfoot>
                                         <tr>
                                             <th>No</th>
-                                            <th>Image</th>
-                                            <th>Property Name</th>
-                                            <th>Status</th>
-                                            <th>Action</th>
+                                            <th>User Name</th>
+                                            <th>E-mail</th>
+                                            <th>Phone</th>
+                                            <th>Inquiry Date</th>
                                         </tr>
                                     </tfoot>
                                 </table>
                                 {{-- {!! 'Showing '.$users->firstItem() !!}
                                 {!! ' to '.$users->lastItem() !!}
                                 {!! ' of '.$users->total().' entries' !!} --}}
-                                {!! $property->appends(request()->input())->links() !!}
+                                {!! $inquiry->appends(request()->input())->links() !!}
                             </div>
                         </div>
                     </div>
@@ -166,7 +120,7 @@
         });
         $('#message').html("");
         function delele(id) {
-            $('#delete_form').attr('action', '{{ url("property") }}' + '/' + id);
+            $('#delete_form').attr('action', '{{ url("ordergatway/users") }}' + '/' + id);
             $('#deleteModal').modal('show');
         }
 
