@@ -47,4 +47,5 @@ Route::group(['middleware' => 'auth:admin'], function () {
     Route::post('/change-password-action', 'Admin\ChangePasswordController@changePassword')->name('change_password_action');
 
     Route::get('inquiry','Admin\HomeController@inquiryView')->name('inquiry');
+    Route::resource('poster','Admin\PosterController');
 });

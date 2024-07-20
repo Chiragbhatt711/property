@@ -41,6 +41,14 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('poster.index') }}" class="nav-link {{ Request::is('poster/*') ||Request::is('poster') ? 'active' : '' }}">
+                <i class="nav-icon fa fa-list-alt"></i>
+                <p>
+                    Poster Images
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('my_profile') }}" class="nav-link {{ Request::is('my-profile/*') ||Request::is('my-profile') ? 'active' : '' }}">
                 <i class="nav-icon fa fa-list-alt"></i>
                 <p>
