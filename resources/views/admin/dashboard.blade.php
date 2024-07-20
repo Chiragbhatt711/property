@@ -18,28 +18,20 @@
                 <div class="col-12">
                     <div class="card card-primary">
                         <div class="card-header">
-                            <h3 class="card-title">ORDERS</h3>
+                            <h3 class="card-title">Dashboard</h3>
                         </div>
                         <div class="card-body">
                             <div class="user_value">
                                 <div class="box">
                                     <div class="bot">
                                         <div class="bar_box">
-                                            <a href="#" class="box">
-                                                <strong>10</strong>
-                                                <span>In Progress</span>
+                                            <a href="{{ route('property.index') }}" class="box">
+                                                <strong>{{ totalPeoperty() }}</strong>
+                                                <span>Total Property</span>
                                             </a>
-                                            <a href="#" class="box">
-                                                <strong></strong>
-                                                <span>Complete</span>
-                                            </a>
-                                            <a href="#" class="box">
-                                                <strong></strong>
-                                                <span>Pending</span>
-                                            </a>
-                                            <a href="#}" class="box">
-                                                <strong></strong>
-                                                <span>Total Users</span>
+                                            <a href="{{ route('inquiry') }}" class="box">
+                                                <strong>{{ TodayInquery() }}</strong>
+                                                <span>Today's Inquery</span>
                                             </a>
                                         </div>
                                     </div>
