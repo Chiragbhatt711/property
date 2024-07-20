@@ -114,6 +114,9 @@ class UserController extends Controller
                 }
             }
             $property->images = $imageUrls;
+            $property->whatsapp_number = '7046059583';
+            $property->phone_number = '7046059583';
+            $property->whatsapp_message = "Hi, i'm intrested in #".$property->id." ".$property->name." please shere more information" ;
         }
 
         $success = "success";
@@ -155,6 +158,9 @@ class UserController extends Controller
                 }
             }
             $property->images = $imageUrls;
+            $property->whatsapp_number = '7046059583';
+            $property->phone_number = '7046059583';
+            $property->whatsapp_message = "Hi, i'm intrested in #".$property->id." ".$property->name." please shere more information" ;
         }
 
         $success = "success";
