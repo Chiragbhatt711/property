@@ -11,6 +11,7 @@ use App\Models\PosterImage;
 use App\Models\Property;
 use App\Models\PropertyType;
 use App\Models\User;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Validator;
 use Hash;
@@ -97,12 +98,16 @@ class UserController extends Controller
     public function getProperty(Request $request)
     {
 
-        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id');
+        $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+        ->leftjoin('cities','properties.city','=','cities.id')
+        ->leftjoin('areas','properties.area','=','areas.id');
         // if(isset($request->))
 
-	    $properties = $properties->select('properties.*', DB::raw('GROUP_CONCAT(property_images.image) as images'))
+	    $properties = $properties->select('properties.*','cities.name as city_name','areas.area_name', DB::raw('GROUP_CONCAT(property_images.image) as images'))
         ->groupBy('properties.id')
 	    ->get();
+
+        $setting = Setting::first();
 
         // Add URL to each image
         foreach ($properties as $property) {
@@ -114,9 +119,14 @@ class UserController extends Controller
                 }
             }
             $property->images = $imageUrls;
-            $property->whatsapp_number = '7046059583';
-            $property->phone_number = '7046059583';
-            $property->whatsapp_message = "Hi, i'm intrested in #".$property->id." ".$property->name." please shere more information" ;
+            $property->city = $property->area_name.', '.$property->city_name;
+            $property->whatsapp_number = $setting->wp_number;
+            $property->phone_number = $setting->phone_number;
+
+            $address = $property->id." ".$property->name;
+            $wpMessage = $setting->wp_message;
+            $wpMessage = str_replace('[property_name]',$address,$wpMessage);
+            $property->whatsapp_message = $wpMessage;
         }
 
         $success = "success";
@@ -125,29 +135,15 @@ class UserController extends Controller
 
     public function getPromotedProperty()
     {
-        //$properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
-        //    ->where('properties.promoted',1)
-        //    ->select('properties.*', DB::raw('MIN(property_images.id) as first_image_id'), 'property_images.image')
-        //    ->groupBy('properties.id') // Group by property ID to get unique properties
-       //     ->get();
-
-       // $properties->transform(function ($property) {
-       //     if ($property->image) {
-       //         $imageUrl = asset('uploads/property_images/' . $property->image);
-       //         $property->image_url = $imageUrl;
-      //      } else {
-      //          $property->image_url = null;
-      //      }
-
-      //      return $property;
-      //  });
-
         $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+            ->leftjoin('cities','properties.city','=','cities.id')
+            ->leftjoin('areas','properties.area','=','areas.id')
             ->where('properties.promoted', 1)
-            ->select('properties.*', DB::raw('GROUP_CONCAT(property_images.image) as images'))
+            ->select('properties.*','cities.name as city_name','areas.area_name', DB::raw('GROUP_CONCAT(property_images.image) as images'))
             ->groupBy('properties.id')
             ->get();
 
+        $setting = Setting::first();
         // Add URL to each image
         foreach ($properties as $property) {
             $images = explode(',', $property->images);
@@ -158,9 +154,14 @@ class UserController extends Controller
                 }
             }
             $property->images = $imageUrls;
-            $property->whatsapp_number = '7046059583';
-            $property->phone_number = '7046059583';
-            $property->whatsapp_message = "Hi, i'm intrested in #".$property->id." ".$property->name." please shere more information" ;
+            $property->city = $property->area_name.', '.$property->city_name;
+            $property->whatsapp_number = $setting->wp_number;
+            $property->phone_number = $setting->phone_number;
+
+            $address = $property->id." ".$property->name;
+            $wpMessage = $setting->wp_message;
+            $wpMessage = str_replace('[property_name]',$address,$wpMessage);
+            $property->whatsapp_message = $wpMessage;
         }
 
         $success = "success";
@@ -180,8 +181,10 @@ class UserController extends Controller
         $id = $request->id;
         if($id){
             $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
+                ->leftjoin('cities','properties.city','=','cities.id')
+                ->leftjoin('areas','properties.area','=','areas.id')
                 ->where('properties.id',$id)
-                ->select('properties.*', 'property_images.id as image_id', 'property_images.image')
+                ->select('properties.*','cities.name as city_name','areas.area_name', 'property_images.id as image_id', 'property_images.image')
                 ->orderBy('properties.id') // Optionally order by property ID for consistency
                 ->get();
 
@@ -189,6 +192,7 @@ class UserController extends Controller
             $groupedProperties = $properties->groupBy('id')->map(function ($group) {
                 $property = $group->first(); // Get the first property in the group
 
+                $setting = Setting::first();
                 // Append all images associated with the property
                 $property->images = $group->map(function ($item) {
                     return [
@@ -200,9 +204,14 @@ class UserController extends Controller
                 // Determine the first image (based on the minimum image ID)
                 $property->first_image = $group->min('image_id');
 
-                $property->whatsapp_number = '7046059583';
-                $property->phone_number = '7046059583';
-                $property->whatsapp_message = "Hi, i'm intrested in #".$property->id." ".$property->name." please shere more information" ;
+                $property->city = $property->area_name.', '.$property->city_name;
+                $property->whatsapp_number = $setting->wp_number;
+                $property->phone_number = $setting->phone_number;
+
+                $address = $property->id." ".$property->name;
+                $wpMessage = $setting->wp_message;
+                $wpMessage = str_replace('[property_name]',$address,$wpMessage);
+                $property->whatsapp_message = $wpMessage;
 
                 return $property;
             })->values();

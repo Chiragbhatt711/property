@@ -49,6 +49,14 @@
             </a>
         </li>
         <li class="nav-item">
+            <a href="{{ route('setting.index') }}" class="nav-link {{ Request::is('setting/*') ||Request::is('setting') ? 'active' : '' }}">
+                <i class="nav-icon fa fa-list-alt"></i>
+                <p>
+                    Setting
+                </p>
+            </a>
+        </li>
+        <li class="nav-item">
             <a href="{{ route('my_profile') }}" class="nav-link {{ Request::is('my-profile/*') ||Request::is('my-profile') ? 'active' : '' }}">
                 <i class="nav-icon fa fa-list-alt"></i>
                 <p>
@@ -56,14 +64,14 @@
                 </p>
             </a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
             <a href="{{ route('change_password') }}" class="nav-link {{ Request::is('change-password/*') ||Request::is('change-password') ? 'active' : '' }}">
                 <i class="nav-icon fa fa-list-alt"></i>
                 <p>
                     Change Password
                 </p>
             </a>
-        </li>
+        </li> -->
       </ul>
     </nav>
   </div>

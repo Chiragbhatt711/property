@@ -26,7 +26,7 @@
                         <div class="card-header">
                             <h3 class="card-title">My Profile</h3>
                         </div>
-                        {!! Form::model($user, ['method' => 'PATCH','route' => ['admin.profile_update',$user->id],'enctype' => 'multipart/form-data']) !!}
+                        {!! Form::model($user, ['method' => 'PATCH','route' => ['profile_update',$user->id],'enctype' => 'multipart/form-data']) !!}
                             @csrf
                             @if (\Session::has('success'))
                                 <div>

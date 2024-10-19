@@ -25,11 +25,11 @@
                             @if (isset($setting) && $setting)
                                 {!! Form::model($setting, [
                                     'method' => 'PATCH',
-                                    'route' => ['admin.setting.update', $setting->id],
+                                    'route' => ['setting.update', $setting->id],
                                     'enctype' => 'multipart/form-data',
                                 ]) !!}
                             @else
-                                {!! Form::open(['route' => 'admin.setting.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
+                                {!! Form::open(['route' => 'setting.store', 'method' => 'POST', 'enctype' => 'multipart/form-data']) !!}
                             @endif
                             @csrf
                             <div class="card-body">
@@ -45,126 +45,30 @@
                                 @endif
                                 <div class="form-group mb-5">
                                     <div class="form-group">
-                                        <h4>Currency conversation rate setting</h4>
-                                        <label for="exampleInputName">Conversion USD to INR</label>
-                                        {!! Form::text('usd_to_inr', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('usd_to_inr'))
-                                            <p class="text-danger">{{ $errors->first('usd_to_inr') }}</p>
+                                        <label for="wp_number">Whatsapp number</label>
+                                        {!! Form::text('wp_number', null, ['class' => 'form-control']) !!}
+                                        @if ($errors->has('wp_number'))
+                                            <p class="text-danger">{{ $errors->first('wp_number') }}</p>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group mb-5">
                                     <div class="form-group">
-                                        <h4>Reffaral settings</h4>
-                                        <label for="exampleInputName">Level 1 earn in %</label>
-                                        {!! Form::text('level_1', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('level_1'))
-                                            <p class="text-danger">{{ $errors->first('level_1') }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputName">Level 2 earn in %</label>
-                                        {!! Form::text('level_2', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('level_2'))
-                                            <p class="text-danger">{{ $errors->first('level_2') }}</p>
+                                        <label for="phone_number">Phone number</label>
+                                        {!! Form::text('phone_number', null, ['class' => 'form-control']) !!}
+                                        @if ($errors->has('phone_number'))
+                                            <p class="text-danger">{{ $errors->first('phone_number') }}</p>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="form-group mb-5">
                                     <div class="form-group">
-                                        <h4>Deposit setting</h4>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="exampleInputName">Debit or credit card bonus in %</label>
-                                                {!! Form::text('debit_credit_bonus', null, ['class' => 'form-control']) !!}
-                                                @if ($errors->has('debit_credit_bonus'))
-                                                    <p class="text-danger">{{ $errors->first('debit_credit_bonus') }}</p>
-                                                @endif
-                                            </div>
-                                            <div class="col-md-6 mt-4">
-                                                <label for="application_to_international_for_debit_credit">Applicable to
-                                                    international ?</label>
-                                                {!! Form::checkbox('application_to_international_for_debit_credit') !!}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label for="exampleInputName">Crypto bonus in %</label>
-                                                {!! Form::text('crypto_discount', null, ['class' => 'form-control']) !!}
-                                                @if ($errors->has('debit_credit_bonus'))
-                                                    <p class="text-danger">{{ $errors->first('debit_credit_bonus') }}</p>
-                                                @endif
-                                            </div>
-                                            <div class="col-md-6 mt-4">
-                                                <label for="application_to_international_for_crypto">Applicable to
-                                                    international ?</label>
-                                                {!! Form::checkbox('application_to_international_for_crypto') !!}
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputName">Paytm bonus in %</label>
-                                        {!! Form::text('payment_discount', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('payment_discount'))
-                                            <p class="text-danger">{{ $errors->first('payment_discount') }}</p>
+                                        <label for="wp_message">Whatsapp message</label>
+                                        {!! Form::textarea('wp_message', null, ['class' => 'form-control']) !!}
+                                        <p>Enter "[property_name]" for replace to inquiry of property name</p>
+                                        @if ($errors->has('wp_message'))
+                                            <p class="text-danger">{{ $errors->first('wp_message') }}</p>
                                         @endif
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputName">Minimum deposit</label>
-                                        {!! Form::text('minimum_deposit', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('minimum_deposit'))
-                                            <p class="text-danger">{{ $errors->first('minimum_deposit') }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <div class="form-group">
-                                        <h4>Invoice setting</h4>
-                                        <label for="exampleInputName">Prefix</label>
-                                        {!! Form::text('prefix', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('prefix'))
-                                            <p class="text-danger">{{ $errors->first('prefix') }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputName">Invoice number</label>
-                                        {!! Form::text('invoice_number', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('invoice_number'))
-                                            <p class="text-danger">{{ $errors->first('invoice_number') }}</p>
-                                        @endif
-                                    </div>
-                                    <div class="form-group">
-                                        <label for="exampleInputName">Postfix</label>
-                                        {!! Form::text('postfix', null, ['class' => 'form-control']) !!}
-                                        @if ($errors->has('postfix'))
-                                            <p class="text-danger">{{ $errors->first('postfix') }}</p>
-                                        @endif
-                                    </div>
-                                </div>
-                                <div class="form-group mb-0">
-                                    <div class="form-group m-0">
-                                        <h4>Signup Bonus</h4>
-                                        <label for="exampleInputName">signup bonus</label>
-                                        {!! Form::radio('sign_up', '1', false, ['id' => 'bonus_yes']) !!}
-                                        <label for="bonus_yes">Yes</label>
-                                        {!! Form::radio('sign_up', '0', true, ['id' => 'bonus_no']) !!}
-                                        <label for="bonus_no">No</label>
-                                        @error('sign_up')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
-                                    </div>
-                                    <div class="form-group" id="div_bonus_yes">
-                                        <label for="exampleInputName">Enter amount</label>
-                                        {!! Form::text('sign_up_amount', null, [
-                                            'placeholder' => 'Enter amount',
-                                            'class' => 'form-control',
-                                            'id' => 'bonus_amount',
-                                        ]) !!}
-                                        @error('sign_up_amount')
-                                            <div class="text-danger">{{ $message }}</div>
-                                        @enderror
                                     </div>
                                 </div>
                             </div>

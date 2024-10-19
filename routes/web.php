@@ -48,4 +48,5 @@ Route::group(['middleware' => 'auth:admin'], function () {
 
     Route::get('inquiry','Admin\HomeController@inquiryView')->name('inquiry');
     Route::resource('poster','Admin\PosterController');
+    Route::resource('setting','SettingController');
 });

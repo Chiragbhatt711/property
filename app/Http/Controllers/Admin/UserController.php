@@ -198,7 +198,7 @@ class UserController extends Controller
             $input['password'] = Hash::make($request->password);
         }
         $user->update($input);
-        return redirect()->route('admin.my_profile')
+        return redirect()->route('my_profile')
             ->with('success', "Profile update sucessfully");
     }
 
