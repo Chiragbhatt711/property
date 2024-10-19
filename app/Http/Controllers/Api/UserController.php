@@ -120,6 +120,7 @@ class UserController extends Controller
             }
             $property->images = $imageUrls;
             $property->city = $property->area_name.', '.$property->city_name;
+            $property->area = $property->area_name.', '.$property->city_name;
             $property->whatsapp_number = $setting->wp_number;
             $property->phone_number = $setting->phone_number;
 
@@ -155,6 +156,7 @@ class UserController extends Controller
             }
             $property->images = $imageUrls;
             $property->city = $property->area_name.', '.$property->city_name;
+            $property->area = $property->area_name.', '.$property->city_name;
             $property->whatsapp_number = $setting->wp_number;
             $property->phone_number = $setting->phone_number;
 
@@ -205,6 +207,7 @@ class UserController extends Controller
                 $property->first_image = $group->min('image_id');
 
                 $property->city = $property->area_name.', '.$property->city_name;
+                $property->area = $property->area_name.', '.$property->city_name;
                 $property->whatsapp_number = $setting->wp_number;
                 $property->phone_number = $setting->phone_number;
 
