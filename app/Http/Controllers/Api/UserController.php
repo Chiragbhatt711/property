@@ -141,8 +141,9 @@ class UserController extends Controller
         $properties = Property::leftJoin('property_images', 'properties.id', '=', 'property_images.property_id')
             ->leftjoin('cities','properties.city','=','cities.id')
             ->leftjoin('areas','properties.area','=','areas.id')
+            ->leftjoin('bhk_types','properties.bhk','=','bhk_types.id')
             ->where('properties.promoted', 1)
-            ->select('properties.*','cities.name as city_name','areas.area_name', DB::raw('GROUP_CONCAT(property_images.image) as images'))
+            ->select('properties.*','cities.name as city_name','areas.area_name','bhk_types.name as bhk', DB::raw('GROUP_CONCAT(property_images.image) as images'))
             ->groupBy('properties.id')
             ->get();
 
