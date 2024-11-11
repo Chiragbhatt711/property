@@ -64,8 +64,6 @@ class PropertyController extends Controller
             'price' => 'required',
             'property_type' => 'required',
             'status' => 'required',
-            'client_name' => 'required',
-            'client_phone' => 'required',
         ],[
             'name.required' => 'Please enter property name',
             'address.required' => 'Please enter address',
@@ -75,8 +73,6 @@ class PropertyController extends Controller
             'price.required' => 'Please enter price',
             'property_type.required' => 'Please select property type',
             'status.required' => 'Please select status',
-            'client_name.required' => 'Please enter client name',
-            'client_phone.required' => 'Please enter client phone number',
         ]);
 
         // dd($request->file('images'));
@@ -147,8 +143,6 @@ class PropertyController extends Controller
             'price' => 'required',
             'property_type' => 'required',
             'status' => 'required',
-            'client_name' => 'required',
-            'client_phone' => 'required',
         ],[
             'name.required' => 'Please enter property name',
             'address.required' => 'Please enter address',
@@ -158,8 +152,6 @@ class PropertyController extends Controller
             'price.required' => 'Please enter price',
             'property_type.required' => 'Please select property type',
             'status.required' => 'Please select status',
-            'client_name.required' => 'Please enter client name',
-            'client_phone.required' => 'Please enter client phone number',
         ]);
 
         // dd($request->file('images'));
