@@ -13,7 +13,7 @@ class LoginController extends Controller
     public function index()
     {
         if (Auth::guard('admin')->user()) {
-            return redirect()->route('admin.category.index');
+            return redirect()->route('dashboard');
         }
         return view('admin.auth.login');
     }
