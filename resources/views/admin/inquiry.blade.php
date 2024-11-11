@@ -32,7 +32,7 @@
                             <div class="card-header">
                                 <div class="d-flex align-items-center justify-content-between">
                                     <h3 class="card-title">Inquiry List</h3>
-                                    <a class="btn btn-dark" id="export-to-excel">Export</a>
+                                    <!-- <a class="btn btn-dark" id="export-to-excel">Export</a> -->
                                 </div>
                             </div>
                             <div class="card-body">
